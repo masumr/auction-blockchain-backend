@@ -1,0 +1,53 @@
+version: "3.7"
+
+services:
+  # db:
+    
+  #   build: ./backend/mysql
+  #   container_name: db
+  #   command: "--default-authentication-plugin=mysql_native_password"
+  #   restart: always
+  #   volumes:
+  #     - backend-data:/var/lib/mysql
+  #   ports:
+  #     - 3310:3306
+  #   networks:
+  #     - backend_network
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=${BACKEND_SERVER_PASSWORD}
+  #     - MYSQL_DATABASE=${BACKEND_DATABASE}
+  #     - MYSQL_ROOT_USER=${BACKEND_USERNAME}
+  #     - MYSQL_PASSWORD=${BACKEND_PASSWORD}
+
+  
+  backend:
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    command: python app/main.py
+    tty: true
+    volumes:
+      - ./backend:/app/:cached
+      - ./.docker/.ipython:/root/.ipython:cached
+    environment:
+      PYTHONPATH: .
+    
+    env_file:
+      - .env
+      
+    ports:
+      - 8860:8860
+
+    # depends_on:
+    #   - db
+
+    networks:
+      - backend_network
+
+
+volumes:
+  backend-data:
+
+networks:
+ backend_network:
+   driver: bridge
