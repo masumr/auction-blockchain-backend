@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from app.db import schemas
 from datetime import datetime , timedelta
 from apscheduler.schedulers.background import BlockingScheduler
+from apscheduler.schedulers.base import STATE_STOPPED
 
 load_dotenv()
 
@@ -15,7 +16,8 @@ def call_scheduler(auction: schemas.AuctionEndBase):
     duration = (auction.auction_start_time - auction.auction_created_time) + timedelta(hours=auction.duration)
     auction_end_time: datetime = datetime.utcnow() + timedelta(seconds=duration.total_seconds())
     scheduler.add_job(auction_end, 'date', run_date = auction_end_time, args = [auction])
-    scheduler.start()
+    if not scheduler.state != STATE_STOPPED:
+        scheduler.start()
 
 def auction_end(auction: schemas.AuctionEndBase):
     abi_dir = "{}/build/contracts/{}.json".format(
@@ -39,4 +41,4 @@ def auction_end(auction: schemas.AuctionEndBase):
         )
     else:
         return "Missing abi file"
-    scheduler.shutdown(wait=False)
+    # scheduler.shutdown(wait=False)
