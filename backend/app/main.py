@@ -30,6 +30,12 @@ app.include_router(
     tags=["Auction"]
 )
 
+app.include_router(
+    routers.profile_router,
+    prefix=config.MAP_URL('profile'),
+    tags=["Profile Image"]
+)
+
 
 
 # add_pagination(app)

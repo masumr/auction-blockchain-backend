@@ -1,3 +1,13 @@
 .hypothesis
 backend/.hypothesis
 backend/.hypothesis/
+
+#pycharm idea file
+.idea/
+backend/media/
+backend/media
+tmp/
+backend/tmp/
+backend/app/files
+backend/app/files/
+
