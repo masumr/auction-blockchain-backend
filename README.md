@@ -4,7 +4,7 @@ Starting the project with hot-reloading enabled
 (the first time it will take a while):
 
 ```bash
-docker-compose up 
+docker-compose up -d
 ```
 
 
