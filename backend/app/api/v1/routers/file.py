@@ -1,12 +1,12 @@
-from audioop import add
+
 import os
-from re import I
+from typing import Optional
 from fastapi import APIRouter, status, File, UploadFile, HTTPException, status
 
 from app.core.utils import file_upload, get_file_path
 
 ALLOWED_FILE_EXTENSIONS = ["jpg", "jpeg", "png"]
-IMAGE_UPLOAD_PATH = "media/profile"
+IMAGE_UPLOAD_PATH = "media"
 
 
 profile_router = pr = APIRouter()
@@ -19,14 +19,20 @@ profile_router = pr = APIRouter()
 )
 async def profile_image_upload(
         address: str,
+        type: Optional[str] = "Profile", 
         file: UploadFile = File(...)
 ):
-    file_location = file_upload(file, address, IMAGE_UPLOAD_PATH)
+    upload_path = IMAGE_UPLOAD_PATH + f"/{type}"
+    
+    file_location = file_upload(file, address, upload_path)
     return "Successfully profile image uploaded"
+
 
 @pr.get("/get_file_by_path/{address}", status_code=status.HTTP_200_OK, )
 async def get_file(
-        address: str
+        address: str,
+        type: Optional[str] = "Profile"
 ):
-    return get_file_path(address, IMAGE_UPLOAD_PATH)
+    upload_path = IMAGE_UPLOAD_PATH + f"/{type}"
+    return get_file_path(address, upload_path, type)
     

@@ -32,8 +32,8 @@ app.include_router(
 
 app.include_router(
     routers.profile_router,
-    prefix=config.MAP_URL('profile'),
-    tags=["Profile Image"]
+    prefix=config.MAP_URL('file'),
+    tags=["Upload Image"]
 )
 
 

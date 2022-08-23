@@ -44,7 +44,7 @@ def file_upload(
         shutil.copyfileobj(file.file, buffer)
     return file_location
 
-def get_file_path(address: str, upload_path: str):
+def get_file_path(address: str, upload_path: str, type: str):
     path = encoding_base64_string(address)
     for _extenstion in ALLOWED_FILE_EXTENSIONS:
         path_dir = "{}/{}".format(
@@ -58,5 +58,5 @@ def get_file_path(address: str, upload_path: str):
     else:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"This {address} user's profile image does not found!"
+            detail=f"This {address} user's {type.lower()} image does not found!"
         )
