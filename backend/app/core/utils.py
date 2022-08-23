@@ -3,9 +3,9 @@ import base64
 import shutil
 from typing import List
 from fastapi import status, HTTPException, UploadFile
-from fastapi.responses import FileResponse
 
-ALLOWED_FILE_EXTENSIONS = ["jpg", "jpeg", "png"]
+
+ALLOWED_FILE_EXTENSIONS = ["jpg", "jpeg", "png", "gif"]
 
 
 def encoding_base64_string(value: str) -> str:
@@ -26,6 +26,7 @@ def file_upload(
         file: UploadFile,
         address: str,
         upload_path: str,
+        type: str,
         ALLOWED_FILE_EXTENSIONS: List = ALLOWED_FILE_EXTENSIONS,
 ) -> str:
     filename = file.filename
@@ -40,23 +41,23 @@ def file_upload(
         os.makedirs(upload_path)
     new_name = f"{encoding_base64_string(address)}.{file_extension}"
     file_location = f"{upload_path}/{new_name}"
+    exist_file_path = get_file_path(address, upload_path, type) 
+    if exist_file_path:
+        os.remove(exist_file_path)
     with open(file_location, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
     return file_location
 
 def get_file_path(address: str, upload_path: str, type: str):
     path = encoding_base64_string(address)
-    for _extenstion in ALLOWED_FILE_EXTENSIONS:
+    for file_extension in ALLOWED_FILE_EXTENSIONS:
         path_dir = "{}/{}".format(
             # os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
             upload_path,
-            f"{path}.{_extenstion}"
+            f"{path}.{file_extension}"
         )
         print(path_dir)
         if os.path.exists(path_dir):
-            return FileResponse(path_dir)
-    else:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"This {address} user's {type.lower()} image does not found!"
-        )
+            # print("Masum: ",FileResponse(path_dir))
+            return path_dir
+    return None   

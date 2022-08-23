@@ -2,6 +2,7 @@
 import os
 from typing import Optional
 from fastapi import APIRouter, status, File, UploadFile, HTTPException, status
+from fastapi.responses import FileResponse
 
 from app.core.utils import file_upload, get_file_path
 
@@ -24,7 +25,7 @@ async def profile_image_upload(
 ):
     upload_path = IMAGE_UPLOAD_PATH + f"/{type}"
     
-    file_location = file_upload(file, address, upload_path)
+    file_location = file_upload(file, address, upload_path, type)
     return "Successfully profile image uploaded"
 
 
@@ -34,5 +35,11 @@ async def get_file(
         type: Optional[str] = "Profile"
 ):
     upload_path = IMAGE_UPLOAD_PATH + f"/{type}"
-    return get_file_path(address, upload_path, type)
+    file_path = get_file_path(address, upload_path, type)
+    if not file_path:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"This {address} user's {type.lower()} image does not found!"
+        )
+    return FileResponse(file_path)
     
