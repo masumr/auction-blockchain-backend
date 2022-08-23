@@ -28,8 +28,7 @@ async def profile_image_upload(
     file_location = file_upload(file, address, upload_path, type)
     return "Successfully profile image uploaded"
 
-
-@pr.get("/get_file_by_path/{address}", status_code=status.HTTP_200_OK, )
+@pr.get("/image/{address}", status_code=status.HTTP_200_OK, )
 async def get_file(
         address: str,
         type: Optional[str] = "Profile"
@@ -41,5 +40,17 @@ async def get_file(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"This {address} user's {type.lower()} image does not found!"
         )
-    return FileResponse(file_path)
+    return file_path
+
+@pr.get("/get_file_by_path/{path}", status_code=status.HTTP_200_OK, )
+async def get_file(
+        path: str
+):
+    if os.path.exists(path):
+        return FileResponse(path)
+    
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail=f"Invalid path"
+    )
     
