@@ -40,12 +40,14 @@ async def get_file(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"This {address} user's {type.lower()} image does not found!"
         )
-    return file_path
+    print(file_path)
+    return "_".join(file_path.split('/'))
 
-@pr.get("/get_file_by_path/{path}", status_code=status.HTTP_200_OK, )
+@pr.get("/get_file_by_path/{path}", status_code=status.HTTP_200_OK)
 async def get_file(
         path: str
 ):
+    path = "/".join(path.split('_'))
     if os.path.exists(path):
         return FileResponse(path)
     
