@@ -41,5 +41,5 @@ async def get_file(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"This {address} user's {type.lower()} image does not found!"
         )
-    return file_path
+    return FileResponse(file_path)
     
