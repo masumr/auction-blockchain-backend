@@ -54,10 +54,11 @@ def get_file_path(address: str, upload_path: str, type: str):
         path_dir = "{}/{}".format(
             # os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
             upload_path,
-            f"{path}.{file_extension}"
+            f"{path}."
         )
-        print(path_dir)
-        if os.path.exists(path_dir):
-            # print("Masum: ",FileResponse(path_dir))
+        if os.path.exists(path_dir+file_extension):
             return path_dir
+        if os.path.exists(path_dir+file_extension.upper()):
+            return path_dir
+        
     return None   
