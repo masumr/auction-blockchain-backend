@@ -57,8 +57,8 @@ def get_file_path(address: str, upload_path: str, type: str):
             f"{path}."
         )
         if os.path.exists(path_dir+file_extension):
-            return path_dir
+            return path_dir+file_extension
         if os.path.exists(path_dir+file_extension.upper()):
-            return path_dir
+            return path_dir+file_extension.upper()
         
     return None   
